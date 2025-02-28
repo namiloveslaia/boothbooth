@@ -1,0 +1,76 @@
+/* General Styling */
+body {
+    background: #f8f4ff; /* Soft pastel purple */
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    color: #6a5acd; /* Lavender text */
+}
+
+/* Main Container */
+.container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Camera & Video */
+.camera-container {
+    position: relative;
+}
+
+video, canvas {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Countdown Timer */
+#countdown {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 50px;
+    font-weight: bold;
+    color: #ff69b4; /* Cute pink */
+    display: none;
+}
+
+/* Filter Buttons */
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0;
+    gap: 5px;
+}
+
+button {
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 10px;
+    background: #ffb6c1; /* Soft pink */
+    color: white;
+    font-size: 14px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #ff69b4; /* Darker pink */
+}
+
+/* Capture & Download Buttons */
+#capture, #download {
+    display: block;
+    margin: 10px auto;
+    width: 80%;
+}
+
+#download {
+    display: none; /* Hidden until a photo is taken */
+}
