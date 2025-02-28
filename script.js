@@ -1,37 +1,62 @@
 const video = document.getElementById("video");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const recordedVideo = document.getElementById("recordedVideo");
 const countdownDisplay = document.getElementById("countdown");
 const filters = document.querySelectorAll(".filter");
 const captureBtn = document.getElementById("capture");
+const recordBtn = document.getElementById("record");
+const stopBtn = document.getElementById("stop");
 const downloadBtn = document.getElementById("download");
-const errorMsg = document.getElementById("error-message");
-const retryBtn = document.getElementById("retry");
+const photoModeBtn = document.getElementById("photoMode");
+const videoModeBtn = document.getElementById("videoMode");
 
+let mediaRecorder;
+let recordedChunks = [];
 let currentFilter = ""; // No filter initially
+let isPhotoMode = true; // Default mode
 
-// Function to ask for camera access
+// Start Camera
 function startCamera() {
-    navigator.mediaDevices.getUserMedia({ video: true })
+    const constraints = {
+        video: {
+            facingMode: "user", // Front camera
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+        }
+    };
+
+    navigator.mediaDevices.getUserMedia(constraints)
         .then((stream) => {
             video.srcObject = stream;
-            errorMsg.style.display = "none"; // Hide error message
         })
         .catch((err) => {
             console.error("Camera access error:", err);
-            errorMsg.innerText = "⚠️ Camera access denied. Please allow camera permissions.";
-            errorMsg.style.display = "block";
-            retryBtn.style.display = "block"; // Show retry button
+            alert("⚠️ Camera access failed. Please allow camera permissions.");
         });
 }
 
-// Call function on page load
+// Initialize Camera on Load
 startCamera();
 
-// Retry button to request camera again
-retryBtn.addEventListener("click", () => {
-    startCamera();
-    retryBtn.style.display = "none"; // Hide button after retrying
+// Switch to Photo Mode
+photoModeBtn.addEventListener("click", () => {
+    isPhotoMode = true;
+    captureBtn.style.display = "block";
+    recordBtn.style.display = "none";
+    stopBtn.style.display = "none";
+    recordedVideo.style.display = "none";
+    downloadBtn.style.display = "none";
+});
+
+// Switch to Video Mode
+videoModeBtn.addEventListener("click", () => {
+    isPhotoMode = false;
+    captureBtn.style.display = "none";
+    recordBtn.style.display = "block";
+    stopBtn.style.display = "none";
+    recordedVideo.style.display = "none";
+    downloadBtn.style.display = "none";
 });
 
 // Apply Filters
@@ -44,7 +69,7 @@ filters.forEach(filter => {
 
 // Capture Photo with Timer
 captureBtn.addEventListener("click", () => {
-    let countdown = 3; // 3 seconds countdown
+    let countdown = 3;
     countdownDisplay.innerText = countdown;
     countdownDisplay.style.display = "block";
 
@@ -64,7 +89,6 @@ function takePhoto() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
-    // Flip & Apply Filter
     ctx.save();
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
@@ -72,16 +96,48 @@ function takePhoto() {
     ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
     ctx.restore();
 
-    // Show download button
     downloadBtn.style.display = "block";
+    downloadBtn.onclick = () => {
+        const link = document.createElement("a");
+        link.href = canvas.toDataURL("image/png");
+        link.download = "photo.png";
+        link.click();
+    };
 }
 
-// Download Photo
-downloadBtn.addEventListener("click", () => {
-    const link = document.createElement("a");
-    link.href = canvas.toDataURL("image/png");
-    link.download = "pastel_photobooth.png";
-    link.click();
+// Start Video Recording
+recordBtn.addEventListener("click", () => {
+    recordedChunks = [];
+    mediaRecorder = new MediaRecorder(video.srcObject);
+    mediaRecorder.start();
+    
+    recordBtn.style.display = "none";
+    stopBtn.style.display = "block";
+
+    mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) recordedChunks.push(event.data);
+    };
+});
+
+// Stop Recording
+stopBtn.addEventListener("click", () => {
+    mediaRecorder.stop();
+    stopBtn.style.display = "none";
+    recordBtn.style.display = "block";
+
+    mediaRecorder.onstop = () => {
+        const blob = new Blob(recordedChunks, { type: "video/mp4" });
+        recordedVideo.src = URL.createObjectURL(blob);
+        recordedVideo.style.display = "block";
+
+        downloadBtn.style.display = "block";
+        downloadBtn.onclick = () => {
+            const link = document.createElement("a");
+            link.href = recordedVideo.src;
+            link.download = "video.mp4";
+            link.click();
+        };
+    };
 });
 
 
