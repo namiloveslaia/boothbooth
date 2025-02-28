@@ -7,12 +7,16 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-<p id="error-message" style="display: none; color: red; margin-top: 10px;"></p>
-<button id="retry" style="display: none;">🔄 Retry Camera Access</button>
 
     <div class="container">
         <h1>📸 Pastel Photobooth</h1>
-        
+
+        <!-- Toggle Mode -->
+        <div class="mode-switch">
+            <button id="photoMode">📷 Picture Mode</button>
+            <button id="videoMode">🎥 Video Mode</button>
+        </div>
+
         <!-- Live Camera -->
         <div class="camera-container">
             <video id="video" autoplay></video>
@@ -29,9 +33,13 @@
             <button class="filter" data-filter="brightness(150%)">Bright</button>
         </div>
 
-        <!-- Capture & Download Buttons -->
+        <!-- Capture & Download -->
         <button id="capture">📸 Take Photo</button>
+        <button id="record">🔴 Start Recording</button>
+        <button id="stop" style="display: none;">⏹ Stop Recording</button>
+
         <canvas id="canvas"></canvas>
+        <video id="recordedVideo" controls style="display: none;"></video>
         <button id="download">⬇️ Download</button>
     </div>
 
