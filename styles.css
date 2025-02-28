@@ -36,17 +36,13 @@ video, canvas {
     transform: translate(-50%, -50%);
     font-size: 50px;
     font-weight: bold;
-    color: #ff69b4; /* Cute pink */
+    color: #ff69b4;
     display: none;
 }
 
-/* Filter Buttons */
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin: 10px 0;
-    gap: 5px;
+/* Mode Switch */
+.mode-switch {
+    margin-bottom: 10px;
 }
 
 button {
@@ -54,23 +50,17 @@ button {
     border: none;
     cursor: pointer;
     border-radius: 10px;
-    background: #ffb6c1; /* Soft pink */
+    background: #ffb6c1;
     color: white;
     font-size: 14px;
     transition: 0.3s;
+    margin: 5px;
 }
 
 button:hover {
-    background: #ff69b4; /* Darker pink */
-}
-
-/* Capture & Download Buttons */
-#capture, #download {
-    display: block;
-    margin: 10px auto;
-    width: 80%;
+    background: #ff69b4;
 }
 
 #download {
-    display: none; /* Hidden until a photo is taken */
+    display: none;
 }
