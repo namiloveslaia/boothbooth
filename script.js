@@ -5,22 +5,41 @@ const countdownDisplay = document.getElementById("countdown");
 const filters = document.querySelectorAll(".filter");
 const captureBtn = document.getElementById("capture");
 const downloadBtn = document.getElementById("download");
+const errorMsg = document.getElementById("error-message");
+const retryBtn = document.getElementById("retry");
 
 let currentFilter = ""; // No filter initially
 
-// Start Camera
-navigator.mediaDevices.getUserMedia({ video: true })
-  .then((stream) => {
-    video.srcObject = stream;
-  })
-  .catch((err) => console.error("Camera access error:", err));
+// Function to ask for camera access
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+            video.srcObject = stream;
+            errorMsg.style.display = "none"; // Hide error message
+        })
+        .catch((err) => {
+            console.error("Camera access error:", err);
+            errorMsg.innerText = "⚠️ Camera access denied. Please allow camera permissions.";
+            errorMsg.style.display = "block";
+            retryBtn.style.display = "block"; // Show retry button
+        });
+}
+
+// Call function on page load
+startCamera();
+
+// Retry button to request camera again
+retryBtn.addEventListener("click", () => {
+    startCamera();
+    retryBtn.style.display = "none"; // Hide button after retrying
+});
 
 // Apply Filters
 filters.forEach(filter => {
-  filter.addEventListener("click", function () {
-    currentFilter = this.dataset.filter;
-    video.style.filter = currentFilter;
-  });
+    filter.addEventListener("click", function () {
+        currentFilter = this.dataset.filter;
+        video.style.filter = currentFilter;
+    });
 });
 
 // Capture Photo with Timer
@@ -64,10 +83,5 @@ downloadBtn.addEventListener("click", () => {
     link.download = "pastel_photobooth.png";
     link.click();
 });
-) {
-  const link = document.createElement("a");
-  link.href = canvas.toDataURL("image/png");
-  link.download = "photo.png";
-  link.click();
-});
+
 
