@@ -3,7 +3,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: maroon; /* Maroon background */
+    background: maroon;
     font-family: 'Poppins', sans-serif;
     text-align: center;
     margin: 0;
@@ -20,7 +20,6 @@ body {
     max-width: 400px;
     width: 90%;
     text-align: center;
-    animation: fadeIn 0.5s ease-in-out;
 }
 
 h1 {
@@ -44,25 +43,4 @@ button {
 button:hover {
     background: lightcoral;
     transform: scale(1.05);
-}
-
-video {
-    width: 100%;
-    border-radius: 15px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-    margin-top: 15px;
-    transform: scaleX(-1); /* Ensures live mirror effect */
-    filter: none; /* Allow dynamic filters */
-    -webkit-transform: scaleX(-1); /* Safari fix */
-}
-
-canvas {
-    display: none;
-}
-
-select {
-    margin-top: 15px;
-    padding: 10px;
-    font-size: 16px;
-    border-radius: 10px;
 }
