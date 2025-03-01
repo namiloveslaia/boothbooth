@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Mode</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="photo-mode">
+        <h1>Photo Mode</h1>
+        <video id="camera" autoplay></video>
+        <canvas id="canvas"></canvas>
+        <select id="filter">
+            <option value="none">No Filter</option>
+            <option value="grayscale(100%)">Grayscale</option>
+            <option value="sepia(100%)">Sepia</option>
+            <option value="invert(100%)">Invert</option>
+            <option value="blur(5px)">Blur</option>
+            <option value="brightness(150%)">Brightness</option>
+            <option value="contrast(200%)">High Contrast</option>
+            <option value="hue-rotate(90deg)">Hue Shift 1</option>
+            <option value="hue-rotate(180deg)">Hue Shift 2</option>
+            <option value="hue-rotate(270deg)">Hue Shift 3</option>
+            <option value="saturate(300%)">Saturation Boost</option>
+            <option value="opacity(50%)">Opacity 50%</option>
+            <option value="drop-shadow(10px 10px 5px gray)">Drop Shadow</option>
+            <option value="contrast(200%) brightness(50%)">Dramatic</option>
+            <option value="contrast(200%) hue-rotate(360deg)">Rainbow</option>
+        </select>
+        <button onclick="capturePhoto()">Capture Photo</button>
+    </div>
+
+    <script>
+        const video = document.getElementById('camera');
+        const canvas = document.getElementById('canvas');
+        const filterSelect = document.getElementById('filter');
+
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            video.srcObject = stream;
+        });
+
+        function capturePhoto() {
+            const context = canvas.getContext('2d');
+            canvas.width = video.videoWidth;
+            canvas.height = video.videoHeight;
+            context.filter = filterSelect.value;
+            context.drawImage(video, 0, 0);
+        }
+    </script>
+</body>
+</html>
