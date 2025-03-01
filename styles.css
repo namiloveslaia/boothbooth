@@ -52,8 +52,10 @@ video {
     border-radius: 10px;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
     margin-top: 15px;
-    transform: scaleX(-1); /* Mirror effect */
+    transform: scaleX(-1); /* Ensures mirror effect */
+    filter: none; /* Allow dynamic filters */
 }
+
 
 canvas {
     display: none;
