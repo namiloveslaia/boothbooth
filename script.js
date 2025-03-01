@@ -1,142 +1,110 @@
-const video = document.getElementById("video");
+onst video = document.getElementById("video");
+const mirrorCanvas = document.getElementById("mirrorCanvas");
+const ctxMirror = mirrorCanvas.getContext("2d");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
+const countdown = document.getElementById("countdown");
 const recordedVideo = document.getElementById("recordedVideo");
-const countdownDisplay = document.getElementById("countdown");
-const filters = document.querySelectorAll(".filter");
-const captureBtn = document.getElementById("capture");
-const recordBtn = document.getElementById("record");
-const stopBtn = document.getElementById("stop");
-const downloadBtn = document.getElementById("download");
-const photoModeBtn = document.getElementById("photoMode");
-const videoModeBtn = document.getElementById("videoMode");
-
+const downloadButton = document.getElementById("download");
 let mediaRecorder;
 let recordedChunks = [];
-let currentFilter = ""; // No filter initially
-let isPhotoMode = true; // Default mode
+let isRecording = false;
 
-// Start Camera
-function startCamera() {
-    const constraints = {
-        video: {
-            facingMode: "user", // Front camera
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
+// Access the camera with audio
+navigator.mediaDevices.getUserMedia({ video: true, audio: true })
+    .then(stream => {
+        video.srcObject = stream;
+        video.play();
+
+        // Mirror effect
+        function drawMirroredVideo() {
+            ctxMirror.save();
+            ctxMirror.scale(-1, 1);
+            ctxMirror.drawImage(video, -mirrorCanvas.width, 0, mirrorCanvas.width, mirrorCanvas.height);
+            ctxMirror.restore();
+            requestAnimationFrame(drawMirroredVideo);
         }
-    };
-
-    navigator.mediaDevices.getUserMedia(constraints)
-        .then((stream) => {
-            video.srcObject = stream;
-        })
-        .catch((err) => {
-            console.error("Camera access error:", err);
-            alert("⚠️ Camera access failed. Please allow camera permissions.");
-        });
-}
-
-// Initialize Camera on Load
-startCamera();
-
-// Switch to Photo Mode
-photoModeBtn.addEventListener("click", () => {
-    isPhotoMode = true;
-    captureBtn.style.display = "block";
-    recordBtn.style.display = "none";
-    stopBtn.style.display = "none";
-    recordedVideo.style.display = "none";
-    downloadBtn.style.display = "none";
-});
-
-// Switch to Video Mode
-videoModeBtn.addEventListener("click", () => {
-    isPhotoMode = false;
-    captureBtn.style.display = "none";
-    recordBtn.style.display = "block";
-    stopBtn.style.display = "none";
-    recordedVideo.style.display = "none";
-    downloadBtn.style.display = "none";
-});
-
-// Apply Filters
-filters.forEach(filter => {
-    filter.addEventListener("click", function () {
-        currentFilter = this.dataset.filter;
-        video.style.filter = currentFilter;
-    });
-});
-
-// Capture Photo with Timer
-captureBtn.addEventListener("click", () => {
-    let countdown = 3;
-    countdownDisplay.innerText = countdown;
-    countdownDisplay.style.display = "block";
-
-    const timer = setInterval(() => {
-        countdown--;
-        countdownDisplay.innerText = countdown;
-        if (countdown <= 0) {
-            clearInterval(timer);
-            countdownDisplay.style.display = "none";
-            takePhoto();
-        }
-    }, 1000);
-});
+        drawMirroredVideo();
+    })
+    .catch(error => console.error("Camera access error:", error));
 
 // Take Photo
 function takePhoto() {
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
-
     ctx.save();
-    ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
-    ctx.filter = currentFilter;
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(video, -canvas.width, 0, canvas.width, canvas.height);
     ctx.restore();
-
-    downloadBtn.style.display = "block";
-    downloadBtn.onclick = () => {
-        const link = document.createElement("a");
-        link.href = canvas.toDataURL("image/png");
-        link.download = "photo.png";
-        link.click();
-    };
+    downloadButton.href = canvas.toDataURL("image/png");
+    downloadButton.download = "photo.png";
 }
 
+document.getElementById("capture").addEventListener("click", () => {
+    countdown.innerText = "3";
+    setTimeout(() => { countdown.innerText = "2"; }, 1000);
+    setTimeout(() => { countdown.innerText = "1"; }, 2000);
+    setTimeout(() => { countdown.innerText = ""; takePhoto(); }, 3000);
+});
+
 // Start Video Recording
-recordBtn.addEventListener("click", () => {
+function startRecording() {
     recordedChunks = [];
-    mediaRecorder = new MediaRecorder(video.srcObject);
+    mediaRecorder = new MediaRecorder(video.srcObject, { mimeType: "video/webm" });
+    mediaRecorder.ondataavailable = event => recordedChunks.push(event.data);
+    mediaRecorder.onstop = saveVideo;
     mediaRecorder.start();
-    
-    recordBtn.style.display = "none";
-    stopBtn.style.display = "block";
+    isRecording = true;
+}
 
-    mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) recordedChunks.push(event.data);
-    };
+document.getElementById("record").addEventListener("click", () => {
+    startRecording();
+    document.getElementById("record").style.display = "none";
+    document.getElementById("stop").style.display = "inline-block";
 });
 
-// Stop Recording
-stopBtn.addEventListener("click", () => {
+document.getElementById("stop").addEventListener("click", () => {
     mediaRecorder.stop();
-    stopBtn.style.display = "none";
-    recordBtn.style.display = "block";
-
-    mediaRecorder.onstop = () => {
-        const blob = new Blob(recordedChunks, { type: "video/mp4" });
-        recordedVideo.src = URL.createObjectURL(blob);
-        recordedVideo.style.display = "block";
-
-        downloadBtn.style.display = "block";
-        downloadBtn.onclick = () => {
-            const link = document.createElement("a");
-            link.href = recordedVideo.src;
-            link.download = "video.mp4";
-            link.click();
-        };
-    };
+    document.getElementById("record").style.display = "inline-block";
+    document.getElementById("stop").style.display = "none";
 });
 
+// Save Video
+function saveVideo() {
+    const blob = new Blob(recordedChunks, { type: "video/webm" });
+    const url = URL.createObjectURL(blob);
+    recordedVideo.src = url;
+    recordedVideo.style.display = "block";
+    downloadButton.href = url;
+    downloadButton.download = "video.webm";
+}
+
+// Boomerang Effect
+function captureBoomerang() {
+    let frames = [];
+    let captureInterval = setInterval(() => {
+        let frame = document.createElement("canvas");
+        frame.width = video.videoWidth;
+        frame.height = video.videoHeight;
+        let frameCtx = frame.getContext("2d");
+        frameCtx.drawImage(video, 0, 0, frame.width, frame.height);
+        frames.push(frame);
+        if (frames.length >= 10) {
+            clearInterval(captureInterval);
+            playBoomerang(frames);
+        }
+    }, 100);
+}
+
+function playBoomerang(frames) {
+    let index = 0;
+    let playInterval = setInterval(() => {
+        if (index >= frames.length) index = frames.length - 2;
+        if (index < 0) clearInterval(playInterval);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(frames[index], 0, 0);
+        index--;
+    }, 100);
+}
+
+document.getElementById("boomerang").addEventListener("click", captureBoomerang);
