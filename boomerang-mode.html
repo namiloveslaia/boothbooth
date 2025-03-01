@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boomerang Mode</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="boomerang-mode">
+        <h1>Boomerang Mode</h1>
+        <video id="camera" autoplay></video>
+        <button onclick="startRecording()">Start Recording</button>
+    </div>
+
+    <script>
+        let mediaRecorder;
+        let recordedChunks = [];
+        const video = document.getElementById('camera');
+
+        navigator.mediaDevices.getUserMedia({ video: true }).then(stream => {
+            video.srcObject = stream;
+            mediaRecorder = new MediaRecorder(stream);
+
+            mediaRecorder.ondataavailable = event => {
+                recordedChunks.push(event.data);
+            };
+
+            mediaRecorder.onstop = () => {
+                let blob = new Blob(recordedChunks, { type: "video/webm" });
+                let url = URL.createObjectURL(blob);
+                let boomerangVideo = document.createElement('video');
+                boomerangVideo.src = url;
+                boomerangVideo.loop = true;
+                document.body.appendChild(boomerangVideo);
+                boomerangVideo.play();
+            };
+        });
+
+        function startRecording() {
+            recordedChunks = [];
+            mediaRecorder.start();
+            setTimeout(() => {
+                mediaRecorder.stop();
+            }, 2000); // 2-second boomerang
+        }
+    </script>
+</body>
+</html>
