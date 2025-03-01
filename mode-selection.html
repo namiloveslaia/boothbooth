@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select Mode</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="mode-selection">
+        <h1>Select Mode</h1>
+        <button onclick="goToPhoto()">Photo Mode</button>
+        <button onclick="goToBoomerang()">Boomerang Mode</button>
+    </div>
+
+    <script>
+        function goToPhoto() {
+            window.location.href = "photo-mode.html";
+        }
+
+        function goToBoomerang() {
+            window.location.href = "boomerang-mode.html";
+        }
+    </script>
+</body>
+</html>
