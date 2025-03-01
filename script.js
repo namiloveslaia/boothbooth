@@ -14,11 +14,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const video = document.getElementById("camera");
     const canvas = document.getElementById("canvas");
     const filterSelect = document.getElementById("filter");
-    const startButton = document.getElementById("start-button");
+    const toggleMirrorButton = document.getElementById("toggle-mirror");
+    let isMirrored = false;
 
     const constraints = {
         video: {
-            facingMode: "user" // Ensures front camera is used on mobile
+            facingMode: "user"
         }
     };
 
@@ -27,11 +28,27 @@ document.addEventListener("DOMContentLoaded", () => {
             navigator.mediaDevices.getUserMedia(constraints)
                 .then(stream => {
                     video.srcObject = stream;
-                    video.play().catch(error => console.log("Autoplay blocked, waiting for user interaction."));
                 })
                 .catch(error => console.error("Error accessing camera:", error));
         }
     }
+
+    startCamera();
+
+    if (filterSelect) {
+        filterSelect.addEventListener("change", () => {
+            video.style.filter = filterSelect.value;
+        });
+    }
+
+    if (toggleMirrorButton) {
+        toggleMirrorButton.addEventListener("click", () => {
+            isMirrored = !isMirrored;
+            video.style.transform = isMirrored ? "scaleX(-1)" : "scaleX(1)";
+        });
+    }
+});
+
 
     // Fix for iOS & Android autoplay restrictions
     if (startButton) {
