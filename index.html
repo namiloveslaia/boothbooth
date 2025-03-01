@@ -3,47 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booth Booth</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Photo Booth</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-    <div class="container">
-        <h1>📸 Booth Booth</h1>
-
-        <!-- Toggle Mode -->
-        <div class="mode-switch">
-            <button id="photoMode">📷 Picture Mode</button>
-            <button id="videoMode">🎥 Video Mode</button>
-        </div>
-
-        <!-- Live Camera -->
-        <div class="camera-container">
-            <video id="video" autoplay></video>
-            <div id="countdown"></div>
-        </div>
-
-        <!-- Filters -->
-        <div class="filters">
-            <button class="filter" data-filter="none">Normal</button>
-            <button class="filter" data-filter="grayscale(100%)">Grayscale</button>
-            <button class="filter" data-filter="sepia(100%)">Sepia</button>
-            <button class="filter" data-filter="invert(100%)">Invert</button>
-            <button class="filter" data-filter="blur(5px)">Blur</button>
-            <button class="filter" data-filter="brightness(150%)">Bright</button>
-        </div>
-
-        <!-- Capture & Download -->
-        <button id="capture">📸 Take Photo</button>
-        <button id="record">🔴 Start Recording</button>
-        <button id="stop" style="display: none;">⏹ Stop Recording</button>
-
-        <canvas id="canvas"></canvas>
-        <video id="recordedVideo" controls style="display: none;"></video>
-        <button id="download">⬇️ Download</button>
+    <div class="cover">
+        <h1>Welcome to Photo Booth</h1>
+        <p>Capture moments with amazing filters!</p>
+        <button onclick="openCamera()">Open Camera</button>
     </div>
 
     <script src="script.js"></script>
 </body>
 </html>
+
 
