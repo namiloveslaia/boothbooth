@@ -1,46 +1,63 @@
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: maroon;
-    font-family: 'Poppins', sans-serif;
-    text-align: center;
-    margin: 0;
-}
+  body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: maroon;
+      font-family: 'Poppins', sans-serif;
+      margin: 0;
+  }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-    max-width: 400px;
-    width: 90%;
-    text-align: center;
-}
+  .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 30px;
+      border-radius: 20px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+  }
 
-h1 {
-    font-size: 24px;
-    color: maroon;
-    margin-bottom: 20px;
-}
+  h1 {
+      font-size: 24px;
+      color: maroon;
+      margin-bottom: 20px;
+  }
 
-button {
-    padding: 15px 30px;
-    font-size: 18px;
-    border: none;
-    border-radius: 30px;
-    background: pink;
-    color: white;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: 0.3s;
-}
+  button {
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 30px;
+      background-color: pink;
+      color: white;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: 0.3s;
+  }
 
-button:hover {
+  button:hover {
+      background-color: lightcoral;
+      transform: scale(1.05);
+  }
+
+  video {
+      width: 100%;
+      border-radius: 15px;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+      margin-top: 15px;
+  }
+
+  select {
+      margin-top: 15px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 10px;
+  }
+
     background: lightcoral;
     transform: scale(1.05);
 }
